@@ -10,12 +10,7 @@ const e = require('express');
 const app = express();
 
 //CONNECTS TO THE LIGAYA.SQL DATABASE USING WORKBENCH
-const db = mysql.createConnection({
-  host     : process.env.DB_HOST,
-  user     : process.env.DB_USER,
-  password : process.env.DB_PASS,//CHANGE ACCORDING TO YOUR WORKBENCH PASSWORD
-  database : process.env.DB_NAME,
-});
+const db = mysql.createConnection("mysql://root:akPfeDt3caasUawAuGMh@containers-us-west-145.railway.app:7442/railway");
 
 //CREATES SESSION IN DATABASE
 const sessionStore = new MySQLStore({
