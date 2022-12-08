@@ -4,7 +4,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser')
 const mysql = require('mysql');
 const MySQLStore = require('express-mysql-session')(session);
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const e = require('express');
 
 const app = express();
@@ -56,8 +56,8 @@ app.use(session ({
 app.post('/register', async (req, res) => {
   try {
     //PASSWORD HASHING
-    const salt = await bcrypt.genSalt(1)
-    const hashedPassword = await bcrypt.hash(req.body.Password, salt)
+    // const salt = await bcrypt.genSalt(1)
+    // const hashedPassword = await bcrypt.hash(req.body.Password, salt)
 
     //STORE INPUTS INTO DATA
     let data = {
@@ -101,16 +101,16 @@ app.post('/login', (req, res) => {
         db.query('SELECT * FROM users WHERE username = ?', [username], (err, passGate) => {
           if(err) throw err;
           //STORES RESULT OF COMPARE TO MATCHED
-          bcrypt.compare(password, passGate[0].password, (err, matched) => {
-            if(err) throw err;
-            //COMPARES PASSWORD INPUT WITH HASHED PASSWORD FROMD DATABASE
-            else if(matched) {
-              req.session.userinfo = username; //IDENTIFIES THE USER WITHIN THE SESSION
-              res.redirect('/index');
-            }
-            else
-              res.send('Username or Password is Incorrect!');
-          });
+          // bcrypt.compare(password, passGate[0].password, (err, matched) => {
+          //   if(err) throw err;
+          //   //COMPARES PASSWORD INPUT WITH HASHED PASSWORD FROMD DATABASE
+          //   else if(matched) {
+          //     req.session.userinfo = username; //IDENTIFIES THE USER WITHIN THE SESSION
+          //     res.redirect('/index');
+          //   }
+          //   else
+          //     res.send('Username or Password is Incorrect!');
+          // });
         });
       }
       else  
@@ -171,8 +171,8 @@ app.post('/savePass', async (req, res) => {
   let confirm = req.body.confirmNewPass;
 
   //APPLY HASH ON NEW PASSWORD
-  const salt =  await bcrypt.genSalt(1)
-  const newHashedPassword = await bcrypt.hash(newPass, salt)
+  // const salt =  await bcrypt.genSalt(1)
+  // const newHashedPassword = await bcrypt.hash(newPass, salt)
 
   //CONFIRMS THE NEW PASSWORD INPUT
   if(newPass == confirm) {
@@ -180,19 +180,19 @@ app.post('/savePass', async (req, res) => {
     db.query('SELECT * FROM users WHERE username = ?', [req.session.userinfo], (err, result) => {
       if(err) throw err;
       //COMPARES OLD PASSWORD AND PASSWORD FROM RESULT
-      bcrypt.compare(oldPass, result[0].password, (err, matched) => {
-        if(err) throw err;
-        else if(matched) {
-          //UPDATES OLD PASSWORD WITH NEW HASH PASSWORD
-          db.query('UPDATE users SET password = ? WHERE username = ?', [newHashedPassword, req.session.userinfo], (err) => {
-            if(err) throw err
-            else
-              res.redirect('profile');
-          });
-        }
-        else
-          res.send('Old Password is Incorrect!');
-      });
+      // bcrypt.compare(oldPass, result[0].password, (err, matched) => {
+      //   if(err) throw err;
+      //   else if(matched) {
+      //     //UPDATES OLD PASSWORD WITH NEW HASH PASSWORD
+      //     db.query('UPDATE users SET password = ? WHERE username = ?', [newHashedPassword, req.session.userinfo], (err) => {
+      //       if(err) throw err
+      //       else
+      //         res.redirect('profile');
+      //     });
+      //   }
+      //   else
+      //     res.send('Old Password is Incorrect!');
+      // });
     });
   }
   else
